@@ -4,7 +4,7 @@ namespace App\Application\Services;
 
 use App\Domain\Repositories\NotificationRepositoryInterface;
 use Illuminate\Support\Facades\Log;
-
+use App\Jobs\RetryNotificationJob;
 class RetryService
 {
     public function __construct(
@@ -42,7 +42,7 @@ class RetryService
         $this->notificationRepository->save($notification);
 
         // Dispatch to queue with delay
-        \App\Jobs\RetryNotificationJob::dispatch($notification->id)
+        RetryNotificationJob::dispatch($notification->id)
             ->delay(now()->addSeconds($delay));
 
         Log::info("Notification retry scheduled", [
