@@ -18,8 +18,7 @@ class Notification
         public ?Carbon            $lastAttemptAt = null,
         public ?string            $lastFailureReason = null
     )
-    {
-    }
+    {}
 
     public function markAsDelivered(): void
     {
