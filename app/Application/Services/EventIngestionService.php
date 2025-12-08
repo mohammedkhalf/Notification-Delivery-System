@@ -16,13 +16,28 @@ class EventIngestionService
 
     public function createEventFromArray(array $data): Event
     {
+        $eventType = $data['eventType'] ?? $data['event_type'] ?? null;
+        $recipient = $data['recipient'] ?? null;
+        $payload = $data['payload'] ?? [];
+        $priority = $data['priority'] ?? 'normal';
+        $timestamp = $data['timestamp'] ?? null;
+        $id = $data['id'] ?? null;
+
+        if ($eventType === null) {
+            throw new \InvalidArgumentException("Missing required field: eventType");
+        }
+
+        if ($recipient === null) {
+            throw new \InvalidArgumentException("Missing required field: recipient");
+        }
+
         return Event::create(
-            eventType: $data['eventType'],
-            payload: $data['payload'] ?? [],
-            recipient: $data['recipient'],
-            priority: Priority::from($data['priority'] ?? 'normal'),
-            timestamp: isset($data['timestamp']) ? \Carbon\Carbon::parse($data['timestamp']) : null,
-            id: $data['id'] ?? null
+            eventType: $eventType,
+            payload: $payload,
+            recipient: $recipient,
+            priority: Priority::from($priority),
+            timestamp: $timestamp ? \Carbon\Carbon::parse($timestamp) : null,
+            id: $id
         );
     }
 
